@@ -1,0 +1,7 @@
+{
+    "config": {
+        "email": "YOUR_EMAIL",
+        "password": "YOUR_PASSWORD",
+        "url": "https://YOUR_ORGANIZATION.slack.com"
+    }
+}
