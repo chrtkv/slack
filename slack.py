@@ -5,23 +5,25 @@ import json
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 import time
 import urllib.parse
+import sys
 
 logging.captureWarnings(True)
 
 
 def get_crumb(url):
-    # get the login form for crumb parsing
     headers = {
         'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36",
     }
+    # get the login form text for crumb parsing
     form_text = requests.get(url, headers=headers).text
+    # search the crumb string
     crumb_string = re.search("name=\"crumb\" value=\"(.*?)\">", form_text)[1]
-    print(crumb_string)
+    # urlencode it
     crumb = urllib.parse.quote(crumb_string)
     return crumb
 
 
-CONFIG = json.loads(open('config.json', 'rt').read())['slack']
+CONFIG = json.loads(open('config.json', 'rt').read())['config']
 USER = CONFIG['email']
 PASSWORD = CONFIG['password']
 MAIN_URL = CONFIG['url']
@@ -34,7 +36,6 @@ def get_cookie(crumb=CRUMB, user=USER, password=PASSWORD):
 
     payload = "signin=1&crumb={}&email={}&password={}".format(crumb, user, password)
     headers = {
-        'authority': "thisisix.slack.com",
         'content-type': "application/x-www-form-urlencoded",
         'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
     }
@@ -259,4 +260,7 @@ def set_reminder(text, channel_id):
 
 
 if __name__ == "__main__":
-    send_message('fffff', '')
+    # channel = sys.argv[1]
+    # message = sys.argv[2]
+    # send_message(message, channel)
+    # print_all_channels()
